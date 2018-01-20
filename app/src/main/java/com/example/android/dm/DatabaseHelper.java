@@ -2,6 +2,7 @@ package com.example.android.dm;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -47,4 +48,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert("Users", null, contentValues);
         return true;
     }
+    public Cursor getAllUsers() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM Users", null);
+        return cursor;
+    }
+    void deleteAllUsers() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from Users");
+    }
+
 }

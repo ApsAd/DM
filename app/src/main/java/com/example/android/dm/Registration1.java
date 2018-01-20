@@ -1,7 +1,10 @@
 package com.example.android.dm;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -33,7 +36,8 @@ public class Registration1 extends AppCompatActivity {
         final String email=b.getString("Username");
         final String password=b.getString("Password");
         String preferences1="";
-        if(amuzementpark.isChecked()) preferences1+="Amusement Parks,";
+
+        if(amuzementpark.isChecked()){ Log.d("Ps","hi"); preferences1+="Amusement Parks,";}
         if(bakery.isChecked()) preferences1+="Bakeries,";
         if(church.isChecked()) preferences1+="Churches,";
         if(mall.isChecked()) preferences1+="Malls,";
@@ -42,11 +46,15 @@ public class Registration1 extends AppCompatActivity {
         if(temple.isChecked()) preferences1+="Temples,";
         final String preferences=preferences1;
         db = new DatabaseHelper(this);
-
+        Log.d("Name",name.toString());
+        Log.d("Preferences",preferences);
+      
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.insertRecord(name.toString(),email.toString(),password.toString(),age.toString(),gender.toString(),address.toString(),phoneno.toString(),preferences.toString());
+                db.insertRecord(name.getEditableText().toString(),email.toString(),password.toString(),age.getEditableText().toString(),gender.getEditableText().toString(),address.getEditableText().toString(),phoneno.getEditableText().toString(),preferences);
+                Intent in=new Intent(getApplicationContext(), DisplayActivity.class);
+                startActivity(in);
             }
         });
 
