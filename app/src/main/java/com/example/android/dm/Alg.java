@@ -33,6 +33,7 @@ public class Alg extends AppCompatActivity {
             Intent i=new Intent(getApplicationContext(),Alg.class);
             i.putExtra("Places",b);
             startActivity(i);
+            //comment
         }
     }
 }
