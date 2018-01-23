@@ -37,43 +37,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Amuzement Park"
-        android:checked="false" />
+        android:checked="false" >
+        </CheckBox>
     <CheckBox
         android:id="@+id/mall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mall"
-        android:checked="false" />
+        android:checked="false">
+    </CheckBox>
     <CheckBox
         android:id="@+id/temple"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Temple"
-        />
+        android:text="Temple">
+
+        </CheckBox>
     <CheckBox
         android:id="@+id/mosque"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mosque"
-        />
+        >
+    </CheckBox>
     <CheckBox
         android:id="@+id/church"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Church"
-        />
+        >
+    </CheckBox>
     <CheckBox
         android:id="@+id/bakery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Beaches"
-        />
+        android:text="Beaches">
+        </CheckBox>
     <CheckBox
         android:id="@+id/restaurants"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Restaurants"
-        />
+        android:text="Restaurants">
+        </CheckBox>
     <Button
         android:id="@+id/pref"
         android:layout_width="wrap_content"

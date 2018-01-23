@@ -24,35 +24,72 @@ public class Registration1 extends AppCompatActivity {
         final EditText address=(EditText)findViewById(R.id.Address);
         final EditText phoneno=(EditText)findViewById(R.id.Phoneno);
         final EditText gender=(EditText)findViewById(R.id.Gender);
-        CheckBox amuzementpark=(CheckBox)findViewById(R.id.amuzementpark);
-        CheckBox mall=(CheckBox)findViewById(R.id.mall);
-        CheckBox temple=(CheckBox)findViewById(R.id.temple);
-        CheckBox mosque=(CheckBox)findViewById(R.id.mosque);
-        CheckBox church=(CheckBox)findViewById(R.id.church);
-        CheckBox bakery=(CheckBox)findViewById(R.id.bakery);
-        CheckBox restaurant=(CheckBox)findViewById(R.id.restaurants);
+        final CheckBox amuzementpark=(CheckBox)findViewById(R.id.amuzementpark);
+        final CheckBox mall=(CheckBox)findViewById(R.id.mall);
+        final CheckBox temple=(CheckBox)findViewById(R.id.temple);
+        final CheckBox mosque=(CheckBox)findViewById(R.id.mosque);
+        final CheckBox church=(CheckBox)findViewById(R.id.church);
+        final CheckBox bakery=(CheckBox)findViewById(R.id.bakery);
+        final CheckBox restaurant=(CheckBox)findViewById(R.id.restaurants);
         Button reg=(Button)findViewById(R.id.pref);
         Bundle b = getIntent().getExtras();
         final String email=b.getString("Username");
         final String password=b.getString("Password");
-        String preferences1="";
+        final StringBuilder preferences1=new StringBuilder(" ");
+        amuzementpark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)amuzementpark).isChecked()){ Log.d("Ps","hi"); preferences1.append("Amusement Parks,");}
+            }
+        });
+        bakery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)bakery).isChecked()){ Log.d("Ps","hi"); preferences1.append("Bakeries,");}
+            }
+        });
+        church.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)church).isChecked()){ Log.d("Ps","hi"); preferences1.append("Churches,");}
+            }
+        });
+        mall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)mall).isChecked()){ Log.d("Ps","hi"); preferences1.append("Malls,");}
+            }
+        });
+        mosque.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)mosque).isChecked()){ Log.d("Ps","hi"); preferences1.append("Mosques,");}
+            }
+        });
+        restaurant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)restaurant).isChecked()){ Log.d("Ps","hi"); preferences1.append("Restaurants,");}
+            }
+        });
+        temple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)temple).isChecked()){ Log.d("Ps","hi"); preferences1.append("Temples,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
 
-        if(amuzementpark.isChecked()){ Log.d("Ps","hi"); preferences1+="Amusement Parks,";}
-        if(bakery.isChecked()) preferences1+="Bakeries,";
-        if(church.isChecked()) preferences1+="Churches,";
-        if(mall.isChecked()) preferences1+="Malls,";
-        if(mosque.isChecked()) preferences1+="Mosques,";
-        if(restaurant.isChecked()) preferences1+="Restaurants,";
-        if(temple.isChecked()) preferences1+="Temples,";
-        final String preferences=preferences1;
+        final String preferences=preferences1.toString();
         db = new DatabaseHelper(this);
-        Log.d("Name",name.toString());
-        Log.d("Preferences",preferences);
-      
+
+        Log.d("Preferences",preferences1.toString());
+       // db.deleteAllUsers();
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.insertRecord(name.getEditableText().toString(),email.toString(),password.toString(),age.getEditableText().toString(),gender.getEditableText().toString(),address.getEditableText().toString(),phoneno.getEditableText().toString(),preferences);
+                db.insertRecord(name.getEditableText().toString(),email.toString(),password.toString(),age.getEditableText().toString(),gender.getEditableText().toString(),address.getEditableText().toString(),phoneno.getEditableText().toString(),preferences1.toString());
                 Intent in=new Intent(getApplicationContext(), DisplayActivity.class);
                 startActivity(in);
             }
