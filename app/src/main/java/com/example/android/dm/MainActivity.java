@@ -11,11 +11,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -24,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final String[] pref = {"Malls", "Amusement Parks", "Temples"}; //to be replaced from user db pref
+        final String[] pref = {"Malls"};//, "Amusement Parks", "Temples"}; //to be replaced from user db pref
         int i;
         for (i = 0; i < pref.length; i++) {
             final DatabaseReference db = FirebaseDatabase.getInstance().getReference();
@@ -130,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                     db.addValueEventListener(new ValueEventListener() {
-
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Log.d("hi2", String.valueOf(place.size())+pref[finalI1]);
@@ -141,7 +143,23 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("Values = ", values.toString());
 
                             }
-                            sort(place);
+                            int count = 0;
+                            TreeMap<Double, List<String>> target = new TreeMap<Double, List<String>>();
+                            for (Map.Entry<Double, List<String>> entry:place.entrySet()) {
+                                if (count >= 5) break;
+
+                                target.put(entry.getKey(), entry.getValue());
+                                count++;
+                            }
+                            for (Map.Entry<Double, List<String>> entry : target.entrySet()) {
+                                Double key = entry.getKey();
+                                List<String> values = entry.getValue();
+                                Log.d("TargetKey = ", key.toString());
+                                Log.d("TargetValues = ", values.toString());
+
+                            }
+                            sort(target);
+
                         }
 
                         @Override
@@ -190,7 +208,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sort(TreeMap<Double, List<String>> place) {
+            SortedSet<Map.Entry<Double, List<String>>> sortedEntries = new TreeSet<Map.Entry<Double, List<String>>>(
+                    new Comparator<Map.Entry<Double, List<String>>>() {
+                        @Override
+                        public int compare(Map.Entry<Double, List<String>> t1, Map.Entry<Double, List<String>> t2) {
+                            List<String> values1 = t1.getValue();
+                            List<String> values2= t2.getValue();
+                            //int res =values1.get(2).compareTo(values2.get(2));
+                           if(Float.parseFloat(values1.get(2))>Float.parseFloat(values2.get(2)))
+                               return -1;
+                            else
+                                return 1;
 
-      }
+                        }
+
+                    }
+            );
+            sortedEntries.addAll(place.entrySet());
+            for (Map.Entry<Double, List<String>> sortedEntry : sortedEntries) {
+                 Double key = sortedEntry.getKey();
+                List<String> values = sortedEntry.getValue();
+                Log.d("SortedKey = ", key.toString());
+                Log.d("SortedValues = ", values.toString());
+            }
+            
+        }
 
 }
