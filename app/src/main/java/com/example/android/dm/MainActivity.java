@@ -10,6 +10,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -135,12 +137,12 @@ public class MainActivity extends AppCompatActivity {
                     db.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            Log.d("hi2", String.valueOf(place.size())+pref[finalI1]);
+                           // Log.d("hi2", String.valueOf(place.size())+pref[finalI1]);
                             for (Map.Entry<Double, List<String>> entry : place.entrySet()) {
                                 Double key = entry.getKey();
                                 List<String> values = entry.getValue();
-                                Log.d("Key = ", key.toString());
-                                Log.d("Values = ", values.toString());
+                                //Log.d("Key = ", key.toString());
+                                //Log.d("Values = ", values.toString());
 
                             }
                             int count = 0;
@@ -151,13 +153,13 @@ public class MainActivity extends AppCompatActivity {
                                 target.put(entry.getKey(), entry.getValue());
                                 count++;
                             }
-                            for (Map.Entry<Double, List<String>> entry : target.entrySet()) {
+                            /*for (Map.Entry<Double, List<String>> entry : target.entrySet()) {
                                 Double key = entry.getKey();
                                 List<String> values = entry.getValue();
                                 Log.d("TargetKey = ", key.toString());
                                 Log.d("TargetValues = ", values.toString());
 
-                            }
+                            }*/
                             sort(target);
 
                         }
@@ -231,7 +233,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("SortedKey = ", key.toString());
                 Log.d("SortedValues = ", values.toString());
             }
-            
+            /*Bundle b=new Bundle();
+            b.putSerializable("sorted", (Serializable) sortedEntries);
+            Intent in=new Intent(getApplicationContext(),Alg.class);
+            in.putExtras(b);
+            startActivity(in);*/
         }
 
 }
