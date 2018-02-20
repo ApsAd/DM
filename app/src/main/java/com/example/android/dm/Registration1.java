@@ -10,6 +10,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by ADITYA on 1/20/2018.
  */
@@ -89,9 +99,45 @@ public class Registration1 extends AppCompatActivity {
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.insertRecord(name.getEditableText().toString(),email.toString(),password.toString(),age.getEditableText().toString(),gender.getEditableText().toString(),address.getEditableText().toString(),phoneno.getEditableText().toString(),preferences1.toString());
-                Intent in=new Intent(getApplicationContext(), DisplayActivity.class);
-                startActivity(in);
+                try {
+                    final RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                    final String url = "http://192.168.1.4:5000/insertUserData";
+                    JSONObject userData = new JSONObject();
+                    userData.put("name",name.getEditableText().toString());
+                    userData.put("email",email.toString());
+                    userData.put("password",password.toString());
+                    userData.put("age",age.getEditableText().toString());
+                    userData.put("gender",gender.getEditableText().toString());
+                    userData.put("address",address.getEditableText().toString());
+                    userData.put("phoneno",phoneno.getEditableText().toString());
+                    userData.put("pref",preferences1.toString());
+
+                    JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, userData, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+                                Log.d("response", response.getString("user"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("error", "error");
+                        }
+                    });
+                    queue.add(req);
+                }catch(Exception e){
+
+                }
+
+                //db.insertRecord(name.getEditableText().toString(),email.toString(),password.toString(),age.getEditableText().toString(),gender.getEditableText().toString(),address.getEditableText().toString(),phoneno.getEditableText().toString(),preferences1.toString());
+                //Intent in=new Intent(getApplicationContext(), DisplayActivity.class);
+                //startActivity(in);
             }
         });
 
