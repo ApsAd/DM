@@ -1,89 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <EditText
-        android:id="@+id/Name"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Name"
-        android:ems="10" />
-    <EditText
-        android:id="@+id/Age"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Age"
-        android:ems="10" />
-    <EditText
-        android:id="@+id/Address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Address"
-        android:ems="10" />
-    <EditText
-        android:id="@+id/Phoneno"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Phone Number"
-        android:ems="10" />
-    <EditText
-        android:id="@+id/Gender"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Gender(Male/Female)"
-        android:ems="10" />
-    <CheckBox
-        android:id="@+id/amuzementpark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Amuzement Park"
-        android:checked="false" >
+        android:layout_height="match_parent"
+        android:stretchColumns="1">
+
+        <EditText
+            android:id="@+id/Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Name"
+            android:ems="10" />
+        <EditText
+            android:id="@+id/Age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Age"
+            android:ems="10" />
+        <EditText
+            android:id="@+id/Address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address"
+            android:ems="10" />
+        <EditText
+            android:id="@+id/Phoneno"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Phone Number"
+            android:ems="10" />
+        <EditText
+            android:id="@+id/Gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Gender(Male/Female)"
+            android:ems="10" />
+        <CheckBox
+            android:id="@+id/amuzementpark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Amuzement Park"
+            android:checked="false" >
         </CheckBox>
-    <CheckBox
-        android:id="@+id/mall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mall"
-        android:checked="false">
-    </CheckBox>
-    <CheckBox
-        android:id="@+id/temple"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Temple">
+        <CheckBox
+            android:id="@+id/mall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mall"
+            android:checked="false">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/temple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Temple">
 
         </CheckBox>
-    <CheckBox
-        android:id="@+id/mosque"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mosque"
-        >
-    </CheckBox>
-    <CheckBox
-        android:id="@+id/church"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Church"
-        >
-    </CheckBox>
-    <CheckBox
-        android:id="@+id/bakery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Beaches">
+        <CheckBox
+            android:id="@+id/mosque"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mosque"
+            >
         </CheckBox>
-    <CheckBox
-        android:id="@+id/restaurants"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Restaurants">
+        <CheckBox
+            android:id="@+id/church"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Church"
+            >
         </CheckBox>
-    <Button
-        android:id="@+id/pref"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Confirm Registration"
-        />
+        <CheckBox
+            android:id="@+id/bakery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Beaches">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/atm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ATM">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/restaurants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Restaurants">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/bookstores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Book Stores">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/cafes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cafes">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/clothing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clothing Stores">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/florist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Florist">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/jewellery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jewellery">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/lodging"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lodging">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/movie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Movie Theatre">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/parks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Parks">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/spas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Spas">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/trains"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trains">
+        </CheckBox>
 
-</LinearLayout>
+        <CheckBox
+            android:id="@+id/zoos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Zoos">
+        </CheckBox>
+        <Button
+            android:id="@+id/pref"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm Registration"
+            />
+
+
+
+    </TableLayout>
+</ScrollView>
+
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:orientation="vertical" android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+    <!---->
+<!--</LinearLayout>-->

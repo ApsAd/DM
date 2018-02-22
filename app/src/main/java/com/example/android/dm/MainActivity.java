@@ -1,15 +1,32 @@
 package com.example.android.dm;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,19 +40,83 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationListener {
+    private LocationManager locationManager;
+    private String provider;
+    float lat;
+    float lon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Get the location manager
+        locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
+
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+        Location location;
+        try {
+            location = locationManager.getLastKnownLocation(provider);
+            if (location != null) {
+                Log.d("Provider ", provider);
+                onLocationChanged(location);
+            } else {
+                Log.d("Location not available", "yes");
+                Log.d("Location not available", "yes");
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Log.d("whatsup", "yes");
+            Bundle b = getIntent().getExtras();
+            final String email=b.getString("email");
+            final String password=b.getString("password");
+            final RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            final String url = "http://192.168.1.3:5000/retrievePreferences";
+            JSONObject userData = new JSONObject();
+            userData.put("email",email);
+            userData.put("password",password);
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, userData, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d("hi","hi");
+                    try {
+                        // Log.d("response",response.get("status").toString());
+                       String pref=response.getString("pref");
+                        Log.d("pref",pref);
+                        String[] finpref=pref.split(",");
+                        Log.d("finpref",finpref[0]+""+finpref[1]+finpref[2]);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("error", "error");
+                }
+            });
+            queue.add(req);
+        }catch(Exception e){
+
+        }
+
         final String[] pref = {"Malls"};//, "Amusement Parks", "Temples"}; //to be replaced from user db pref
         int i;
         for (i = 0; i < pref.length; i++) {
             final DatabaseReference db = FirebaseDatabase.getInstance().getReference();
             final DatabaseReference mydb = db.child("dataset/" + pref[i] + "/");
-            final String curlat = "13.05307"; //to be replaced by gps code
-            final String curlon = "80.19310";
+            final String curlat = Float.toString(lat); //to be replaced by gps code
+            final String curlon = Float.toString(lon);
+            Log.d("curlat",curlat);
+            Log.d("curlon",curlon);
             final int finalI = i;
             final int finalI1 = i;
             ValueEventListener x = new ValueEventListener() {
@@ -240,4 +321,43 @@ public class MainActivity extends AppCompatActivity {
             startActivity(in);*/
         }
 
+    /*@Override
+    protected void onPause() {
+        super.onPause();
+        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
+            Log.d("test2","hi");
+            // TODO: Consider calling
+            return;
+        }
+        locationManager.removeUpdates(this);
+    }*/
+    @Override
+    public void onLocationChanged(Location location) {
+         lat = (float) (location.getLatitude());
+         lon = (float) (location.getLongitude());
+        Log.d("Laatitude", String.valueOf(lat));
+        Log.d("Longitude", String.valueOf(lon));
+        Toast.makeText(this, " location! ", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+        Toast.makeText(this, "Enabled new provider " + provider,
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+        Toast.makeText(this, "Disabled provider " + provider,
+                Toast.LENGTH_SHORT).show();
+    }
 }

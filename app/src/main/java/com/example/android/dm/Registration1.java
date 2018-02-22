@@ -41,6 +41,18 @@ public class Registration1 extends AppCompatActivity {
         final CheckBox church=(CheckBox)findViewById(R.id.church);
         final CheckBox bakery=(CheckBox)findViewById(R.id.bakery);
         final CheckBox restaurant=(CheckBox)findViewById(R.id.restaurants);
+        final CheckBox atm=(CheckBox)findViewById(R.id.atm);
+        final CheckBox bookstore=(CheckBox)findViewById(R.id.bookstores);
+        final CheckBox cafes=(CheckBox)findViewById(R.id.cafes);
+        final CheckBox clothing=(CheckBox)findViewById(R.id.clothing);
+        final CheckBox florist=(CheckBox)findViewById(R.id.florist);
+        final CheckBox jewellery=(CheckBox)findViewById(R.id.jewellery);
+        final CheckBox lodging=(CheckBox)findViewById(R.id.lodging);
+        final CheckBox movie=(CheckBox)findViewById(R.id.movie);
+        final CheckBox parks=(CheckBox)findViewById(R.id.parks);
+        final CheckBox spas=(CheckBox)findViewById(R.id.spas);
+        final CheckBox trains=(CheckBox)findViewById(R.id.trains);
+        final CheckBox zoos=(CheckBox)findViewById(R.id.zoos);
         Button reg=(Button)findViewById(R.id.pref);
         Bundle b = getIntent().getExtras();
         final String email=b.getString("Username");
@@ -91,6 +103,116 @@ public class Registration1 extends AppCompatActivity {
             }
         });
 
+
+        atm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)atm).isChecked()){ Log.d("Ps","hi"); preferences1.append("ATM,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
+
+        bookstore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)bookstore).isChecked()){ Log.d("Ps","hi"); preferences1.append("Book Stores,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
+
+        cafes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)cafes).isChecked()){ Log.d("Ps","hi"); preferences1.append("Cafes,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
+
+        clothing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)clothing).isChecked()){ Log.d("Ps","hi"); preferences1.append("Clothing Stores,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
+
+        florist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)florist).isChecked()){ Log.d("Ps","hi"); preferences1.append("Florist,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
+
+        jewellery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)jewellery).isChecked()){ Log.d("Ps","hi"); preferences1.append("Jewellery,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
+
+       lodging.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)lodging).isChecked()){ Log.d("Ps","hi"); preferences1.append("Lodging,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
+
+        movie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)movie).isChecked()){ Log.d("Ps","hi"); preferences1.append("Movie Theatre,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
+
+        parks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)parks).isChecked()){ Log.d("Ps","hi"); preferences1.append("Parks,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
+
+        spas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)spas).isChecked()){ Log.d("Ps","hi"); preferences1.append("Spas,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
+
+        trains.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)trains).isChecked()){ Log.d("Ps","hi"); preferences1.append("Trains,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
+
+        zoos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox)zoos).isChecked()){ Log.d("Ps","hi"); preferences1.append("Zoos,");
+                    Log.d("Preferences1", preferences1.toString());
+                }
+            }
+        });
+
+
         final String preferences=preferences1.toString();
         db = new DatabaseHelper(this);
 
@@ -101,7 +223,7 @@ public class Registration1 extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     final RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                    final String url = "http://192.168.1.4:5000/insertUserData";
+                    final String url = "http://192.168.1.3:5000/insertUserData";
                     JSONObject userData = new JSONObject();
                     userData.put("name",name.getEditableText().toString());
                     userData.put("email",email.toString());
@@ -134,7 +256,13 @@ public class Registration1 extends AppCompatActivity {
                 }catch(Exception e){
 
                 }
-
+                Bundle bundle = new Bundle();
+                bundle.putString("email",email);
+                bundle.putString("password",password);
+                Intent myIntent = new Intent();
+                myIntent.setClass(getBaseContext(), MainActivity.class);
+                myIntent.putExtras(bundle);
+                startActivity(myIntent);
                 //db.insertRecord(name.getEditableText().toString(),email.toString(),password.toString(),age.getEditableText().toString(),gender.getEditableText().toString(),address.getEditableText().toString(),phoneno.getEditableText().toString(),preferences1.toString());
                 //Intent in=new Intent(getApplicationContext(), DisplayActivity.class);
                 //startActivity(in);
