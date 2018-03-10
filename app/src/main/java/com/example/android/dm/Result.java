@@ -26,6 +26,7 @@ public class Result extends AppCompatActivity {
     HashMap<String, float[]> route1 = new HashMap<String, float[]>();
     HashMap<String, float[]> route2 = new HashMap<String, float[]>();
     HashMap<String, float[]> route3 = new HashMap<String, float[]>();
+    String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class Result extends AppCompatActivity {
             Log.d("Inside try123","hello");
             // final String[] final_routename = {""};
             //final String[] final_routeloc = {""};
-            String email=b.getString("email");
+             email=b.getString("email");
             Log.d("Result email",email);
             final String password=b.getString("password");
             Log.d("Result pass",password);
@@ -126,6 +127,7 @@ public class Result extends AppCompatActivity {
                         bundle.putSerializable("route1",route1);
                         bundle.putSerializable("route2",route2);
                         bundle.putSerializable("route3",route3);
+                        bundle.putString("email",email);
                         Intent intent=new Intent(getApplicationContext(),Routes.class);
                         intent.putExtras(bundle);
                         startActivity(intent);

@@ -2,6 +2,7 @@ package layout;
 
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -22,7 +23,14 @@ import com.akexorcist.googledirection.model.Leg;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.model.Step;
 import com.akexorcist.googledirection.util.DirectionConverter;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.android.dm.R;
+import com.example.android.dm.Routes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -34,6 +42,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,10 +66,12 @@ public class tab_fragment_1 extends Fragment implements View.OnClickListener, On
     private LatLng gallery = new LatLng(41.9007082, -87.6488802);
     LatLng[] x=new LatLng[3];
     String[] keys=new String[3];
+    String email,routename="",routelatlon="";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
       route1= (HashMap<String, float[]>)getArguments().getSerializable("route1");
+        email=getArguments().getString("email");
         Set routeset1 = route1.keySet();
         int i=0,j=0;
         for (Iterator in = routeset1.iterator(); in.hasNext(); ) {
@@ -67,10 +80,12 @@ public class tab_fragment_1 extends Fragment implements View.OnClickListener, On
             float[] value = route1.get(key);
             x[i++]=new LatLng(value[0],value[1]);
             Log.d("Route1pageradapter:", key + "lat " + value[0]+"long "+value[1]);
-
+            routelatlon+=value[0]+","+value[1]+",";
+            routename+=key+",";
         }
         for(i=0;i<3;i++){
             Log.d("latlngarr",x[i].toString());
+
         }
     }
 
@@ -85,6 +100,37 @@ public class tab_fragment_1 extends Fragment implements View.OnClickListener, On
             @Override
             public void onClick(View view) {
 
+
+
+                    Log.d("myemail",email);
+                    Log.d("myroutename",routename);
+                    Log.d("myroutelatln",routelatlon);
+                    try {
+                    final RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+                    final String url = "http://192.168.1.4:5000/updateRoutes";
+
+                    JSONObject userData = new JSONObject();
+                    userData.put("name","dummy");
+                    userData.put("email",email);
+                    userData.put("routename",routename);
+                    userData.put("routelatlon",routelatlon);
+
+                    final JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, userData, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast.makeText(getActivity().getApplicationContext(),"Updated!Thank you:)",Toast.LENGTH_SHORT).show();
+                        }
+
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("Inside Response:", "error");
+                        }
+                    });
+                    queue.add(req);
+                }catch(Exception e){
+
+                }
             }
         });
         btnRequestDirection.setOnClickListener((View.OnClickListener) this);

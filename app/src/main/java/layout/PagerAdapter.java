@@ -27,6 +27,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
         HashMap<String, float[]> route1= (HashMap<String, float[]>) b.getSerializable("route1");
         HashMap<String, float[]> route2= (HashMap<String, float[]>) b.getSerializable("route2");
         HashMap<String, float[]> route3= (HashMap<String, float[]>) b.getSerializable("route3");
+        String email=b.getString("email");
 
         Set routeset1 = route3.keySet();
         for (Iterator in = routeset1.iterator(); in.hasNext(); ) {
@@ -41,15 +42,18 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
                 tab_fragment_1 tab1 = new tab_fragment_1();
                 bundle.putSerializable("route1",route1);
+                bundle.putString("email",email);
                 tab1.setArguments(bundle);
                 return tab1;
             case 1:
                 bundle.putSerializable("route2",route2);
+                bundle.putString("email",email);
                 tab_fragment_2 tab2 = new  tab_fragment_2();
                 tab2.setArguments(bundle);
                 return tab2;
             case 2:
                 bundle.putSerializable("route3",route3);
+                bundle.putString("email",email);
                 tab_fragment_3 tab3 = new tab_fragment_3();
                 tab3.setArguments(bundle);
                 return tab3;

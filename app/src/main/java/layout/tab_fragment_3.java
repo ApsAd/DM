@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
@@ -21,6 +22,12 @@ import com.akexorcist.googledirection.model.Leg;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.model.Step;
 import com.akexorcist.googledirection.util.DirectionConverter;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.android.dm.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,6 +40,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,11 +62,14 @@ public class tab_fragment_3 extends Fragment implements View.OnClickListener, On
     private LatLng dinner = new LatLng(41.8909056, -87.6467561);
     private LatLng gallery = new LatLng(41.9007082, -87.6488802);
     String[] keys=new String[3];
+    String email,routename="",routelatlon="";
+    private Button insert;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         route3= (HashMap<String, float[]>)getArguments().getSerializable("route3");
+        email=getArguments().getString("email");
         Set routeset3 = route3.keySet();
         int i=0,j=0;
         for (Iterator in = routeset3.iterator(); in.hasNext(); ) {
@@ -66,7 +78,8 @@ public class tab_fragment_3 extends Fragment implements View.OnClickListener, On
             float[] value = route3.get(key);
             x[i++]=new LatLng(value[0],value[1]);
             Log.d("Route3pageradapter:", key + "lat " + value[0]+"long "+value[1]);
-
+            routelatlon+=value[0]+","+value[1]+",";
+            routename+=key+",";
         }
         for(i=0;i<3;i++){
             Log.d("latlngarr3",x[i].toString());
@@ -79,6 +92,44 @@ public class tab_fragment_3 extends Fragment implements View.OnClickListener, On
 
         View rootView = inflater.inflate(R.layout.tab_fragment_3, container, false);
         btnRequestDirection = (Button) rootView.findViewById(R.id.btn_request_direction);
+        insert=(Button)rootView.findViewById(R.id.insert);
+        insert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+                Log.d("myemail",email);
+                Log.d("myroutename",routename);
+                Log.d("myroutelatln",routelatlon);
+                try {
+                    final RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+                    final String url = "http://192.168.1.4:5000/updateRoutes";
+
+                    JSONObject userData = new JSONObject();
+                    userData.put("name","dummy");
+                    userData.put("email",email);
+                    userData.put("routename",routename);
+                    userData.put("routelatlon",routelatlon);
+
+                    final JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, userData, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast.makeText(getActivity().getApplicationContext(),"Updated!Thank you:)",Toast.LENGTH_SHORT).show();
+                        }
+
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("Inside Response:", "error");
+                        }
+                    });
+                    queue.add(req);
+                }catch(Exception e){
+
+                }
+            }
+        });
         btnRequestDirection.setOnClickListener((View.OnClickListener) this);
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
