@@ -1,10 +1,14 @@
-package com.example.android.dm;
+package layout;
+
+
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.akexorcist.googledirection.DirectionCallback;
@@ -16,10 +20,14 @@ import com.akexorcist.googledirection.model.Leg;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.model.Step;
 import com.akexorcist.googledirection.util.DirectionConverter;
+import com.example.android.dm.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -28,11 +36,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Akexorcist on 11/10/2017 AD.
- */
 
-public class Home extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, DirectionCallback {
+public class tab_fragment_2 extends Fragment implements View.OnClickListener, OnMapReadyCallback, DirectionCallback {
+
     private Button btnRequestDirection;
     private GoogleMap googleMap;
     private String serverKey = "AIzaSyD2YT_mb5cQbtK67fW_zeYgEPSjawVC2TM";
@@ -40,41 +46,23 @@ public class Home extends AppCompatActivity implements View.OnClickListener, OnM
     private LatLng shopping = new LatLng(41.8766061, -87.6556908);
     private LatLng dinner = new LatLng(41.8909056, -87.6467561);
     private LatLng gallery = new LatLng(41.9007082, -87.6488802);
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
 
-        btnRequestDirection = (Button) findViewById(R.id.btn_request_direction);
-        btnRequestDirection.setOnClickListener(this);
-
-        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.btn_request_direction) {
-            requestDirection();
-        }
-    }
-
-    public void requestDirection() {
-        Snackbar.make(btnRequestDirection, "Direction Requesting...", Snackbar.LENGTH_SHORT).show();
-        GoogleDirectionConfiguration.getInstance().setLogEnabled(true);
-        GoogleDirection.withServerKey(serverKey)
-                .from(park)
-                .and(shopping)
-                .and(dinner)
-                .to(gallery)
-                .transportMode(TransportMode.DRIVING)
-                .execute(this);
+        View rootView = inflater.inflate(R.layout.tab_fragment_3, container, false);
+        btnRequestDirection = (Button) rootView.findViewById(R.id.btn_request_direction);
+        btnRequestDirection.setOnClickListener((View.OnClickListener) this);
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        return rootView;
     }
 
     @Override
@@ -90,7 +78,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, OnM
                     googleMap.addMarker(new MarkerOptions().position(leg.getEndLocation().getCoordination()));
                 }
                 List<Step> stepList = leg.getStepList();
-                ArrayList<PolylineOptions> polylineOptionList = DirectionConverter.createTransitPolyline(this, stepList, 5, Color.RED, 3, Color.BLUE);
+                ArrayList<PolylineOptions> polylineOptionList = DirectionConverter.createTransitPolyline(getActivity().getApplicationContext(), stepList, 5, Color.RED, 3, Color.BLUE);
                 for (PolylineOptions polylineOption : polylineOptionList) {
                     googleMap.addPolyline(polylineOption);
                 }
@@ -98,6 +86,13 @@ public class Home extends AppCompatActivity implements View.OnClickListener, OnM
             setCameraWithCoordinationBounds(route);
             btnRequestDirection.setVisibility(View.GONE);
         }
+
+    }
+    private void setCameraWithCoordinationBounds(Route route) {
+        LatLng southwest = route.getBound().getSouthwestCoordination().getCoordination();
+        LatLng northeast = route.getBound().getNortheastCoordination().getCoordination();
+        LatLngBounds bounds = new LatLngBounds(southwest, northeast);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
     }
 
     @Override
@@ -105,10 +100,26 @@ public class Home extends AppCompatActivity implements View.OnClickListener, OnM
         Snackbar.make(btnRequestDirection, t.getMessage(), Snackbar.LENGTH_SHORT).show();
     }
 
-    private void setCameraWithCoordinationBounds(Route route) {
-        LatLng southwest = route.getBound().getSouthwestCoordination().getCoordination();
-        LatLng northeast = route.getBound().getNortheastCoordination().getCoordination();
-        LatLngBounds bounds = new LatLngBounds(southwest, northeast);
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.btn_request_direction) {
+            requestDirection();
+        }
+    }
+    public void requestDirection() {
+        Snackbar.make(btnRequestDirection, "Direction Requesting...", Snackbar.LENGTH_SHORT).show();
+        GoogleDirectionConfiguration.getInstance().setLogEnabled(true);
+        GoogleDirection.withServerKey(serverKey)
+                .from(park)
+                .and(shopping)
+                .and(dinner)
+                .to(gallery)
+                .transportMode(TransportMode.DRIVING)
+                .execute(this);
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
     }
 }

@@ -55,8 +55,8 @@ public class Registration1 extends AppCompatActivity {
         final CheckBox zoos=(CheckBox)findViewById(R.id.zoos);
         Button reg=(Button)findViewById(R.id.pref);
         Bundle b = getIntent().getExtras();
-        final String email=b.getString("Username");
-        final String password=b.getString("Password");
+        final String email=b.getString("email");
+        final String password=b.getString("password");
         final StringBuilder preferences1=new StringBuilder(" ");
         amuzementpark.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +158,7 @@ public class Registration1 extends AppCompatActivity {
             }
         });
 
-       lodging.setOnClickListener(new View.OnClickListener() {
+        lodging.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(((CheckBox)lodging).isChecked()){ Log.d("Ps","hi"); preferences1.append("Lodging,");
@@ -217,13 +217,13 @@ public class Registration1 extends AppCompatActivity {
         db = new DatabaseHelper(this);
 
         Log.d("Preferences",preferences1.toString());
-       // db.deleteAllUsers();
+        // db.deleteAllUsers();
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     final RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                    final String url = "http://192.168.1.3:5000/insertUserData";
+                    final String url = "http://192.168.1.4:5000/insertUserData";
                     JSONObject userData = new JSONObject();
                     userData.put("name",name.getEditableText().toString());
                     userData.put("email",email.toString());
@@ -239,7 +239,7 @@ public class Registration1 extends AppCompatActivity {
                         public void onResponse(JSONObject response) {
 
                             try {
-                                Log.d("response", response.getString("user"));
+                                Log.d("response_reg1: ", response.getString("user"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -263,9 +263,7 @@ public class Registration1 extends AppCompatActivity {
                 myIntent.setClass(getBaseContext(), MainActivity.class);
                 myIntent.putExtras(bundle);
                 startActivity(myIntent);
-                //db.insertRecord(name.getEditableText().toString(),email.toString(),password.toString(),age.getEditableText().toString(),gender.getEditableText().toString(),address.getEditableText().toString(),phoneno.getEditableText().toString(),preferences1.toString());
-                //Intent in=new Intent(getApplicationContext(), DisplayActivity.class);
-                //startActivity(in);
+
             }
         });
 

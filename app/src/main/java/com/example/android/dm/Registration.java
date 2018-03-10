@@ -37,7 +37,7 @@ public class Registration extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     final RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                    final String url = "http://192.168.1.3:5000/login";
+                    final String url = "http://192.168.1.4:5000/login";
                     JSONObject userData = new JSONObject();
                     userData.put("email",UserName.getEditableText().toString());
                     userData.put("password",Password.getEditableText().toString());
@@ -47,16 +47,21 @@ public class Registration extends AppCompatActivity {
                         public void onResponse(JSONObject response) {
 
                             try {
-                               // Log.d("response",response.get("status").toString());
+                                // Log.d("response",response.get("status").toString());
                                 if(response.getBoolean("status")== true){
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("email", UserName.getEditableText().toString());
+                                    bundle.putString("password", Password.getEditableText().toString());
                                     Intent myIntent = new Intent();
                                     myIntent.setClass(getBaseContext(), MainActivity.class);
+                                    myIntent.putExtras(bundle);
                                     startActivity(myIntent);
                                 }
                                 else{
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("Username", UserName.getEditableText().toString());
-                                    bundle.putString("Password", Password.getEditableText().toString());
+                                    Log.d("Inside else:","Hello");
+                                    bundle.putString("email", UserName.getEditableText().toString());
+                                    bundle.putString("password", Password.getEditableText().toString());
 
                                     Intent myIntent = new Intent();
                                     myIntent.setClass(getBaseContext(), Registration1.class);
@@ -88,5 +93,5 @@ public class Registration extends AppCompatActivity {
 
         //Add the bundle into myIntent for referencing variables
 
-     }
     }
+}

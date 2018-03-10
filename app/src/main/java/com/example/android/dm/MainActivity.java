@@ -45,11 +45,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private String provider;
     float lat;
     float lon;
+    String[] finpref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Bundle b = getIntent().getExtras();
+        lat = (float) 13.0429;
+        lon = (float) 80.2739;
+        final String email=b.getString("email");
+        final String password=b.getString("password");
         // Get the location manager
         locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
@@ -57,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, false);
         Location location;
-        try {
+        /*try {
             location = locationManager.getLastKnownLocation(provider);
             if (location != null) {
                 Log.d("Provider ", provider);
@@ -68,15 +74,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         } catch (SecurityException e) {
             e.printStackTrace();
-        }
+        }*/
 
         try {
             Log.d("whatsup", "yes");
-            Bundle b = getIntent().getExtras();
-            final String email=b.getString("email");
-            final String password=b.getString("password");
+
             final RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-            final String url = "http://192.168.1.3:5000/retrievePreferences";
+            final String url = "http://192.168.1.4:5000/retrievePreferences";
             JSONObject userData = new JSONObject();
             userData.put("email",email);
             userData.put("password",password);
@@ -87,10 +91,22 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     Log.d("hi","hi");
                     try {
                         // Log.d("response",response.get("status").toString());
-                       String pref=response.getString("pref");
-                        Log.d("pref",pref);
+                        String pref=response.getString("pref");
+                        Log.d("preferences",pref);
                         String[] finpref=pref.split(",");
-                        Log.d("finpref",finpref[0]+""+finpref[1]+finpref[2]);
+                        Log.d("finpref",finpref[0]+" "+finpref[1]+" "+finpref[2]);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("preferences",pref);
+                     /*   lat = (float) 13.0429;
+                        lon = (float) 80.2739;*/
+                        bundle.putFloat("curlat",lat);
+                        bundle.putFloat("curlon",lon);
+                        bundle.putString("email",email);
+                        bundle.putString("password",password);
+                        Intent myIntent = new Intent();
+                        myIntent.setClass(getBaseContext(), DPP.class);
+                        myIntent.putExtras(bundle);
+                        startActivity(myIntent);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -100,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d("error", "error");
+                    Log.d("error", "Main Activity Error");
                 }
             });
             queue.add(req);
@@ -108,237 +124,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         }
 
-        final String[] pref = {"Malls"};//, "Amusement Parks", "Temples"}; //to be replaced from user db pref
-        int i;
-        for (i = 0; i < pref.length; i++) {
-            final DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-            final DatabaseReference mydb = db.child("dataset/" + pref[i] + "/");
-            final String curlat = Float.toString(lat); //to be replaced by gps code
-            final String curlon = Float.toString(lon);
-            Log.d("curlat",curlat);
-            Log.d("curlon",curlon);
-            final int finalI = i;
-            final int finalI1 = i;
-            ValueEventListener x = new ValueEventListener() {
-                final TreeMap<Double, List<String>> place = new TreeMap<Double, List<String>>();
 
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    int count = 0;
-
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        count++;
-                        if (count == 20) break;
-                        final List<String> detail = new ArrayList<String>();
-                        final Double[] dist = {0.0};
-                        final int[] flag1 = {0};
-                        String key = child.getKey().toString();
-                        String[] key1 = key.split("=");
-                        String key2 = "";
-                        for (int i = 0; i < key1[0].length(); i++) {
-                            if (key1[0].charAt(i) != '{')
-                                key2 += key1[0].charAt(i); //retrieving the unique key of each data element
-                        }
-                        DatabaseReference db1 = mydb.child(key2 + "/result/geometry/location");
-                        DatabaseReference db2 = mydb.child(key2 + "/result/rating");
-                        DatabaseReference db3 = mydb.child(key2 + "/result/name");
-                        db1.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String loc = dataSnapshot.getValue().toString();
-                                //retrieving latitude and longitude
-                                String[] latlon = loc.split(",");
-                                String[] lat1 = latlon[0].split("=");
-                                String[] lon1 = latlon[1].split("=");
-                                String lat = lat1[1];
-                                String lon2 = lon1[1];
-                                String lon = "";
-                                for (int i = 0; i < lon1[1].length(); i++) {
-                                    if (lon1[1].charAt(i) != '}')
-                                        lon += lon1[1].charAt(i);
-                                }
-                                dist[0] = haversineformula(lat, lon, curlat, curlon); //calculating distance
-                                if (dist[0] < 15) {
-                                    flag1[0] = 1;
-                                    detail.add(lat);
-                                    detail.add(lon);
-                                }
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                        db2.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String rat;
-                                if (dataSnapshot.exists()) {
-                                    rat = dataSnapshot.getValue().toString();
-                                } else {
-                                    rat = "0";
-                                }
-                                if (flag1[0] == 1) {
-                                    detail.add(rat);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                        db3.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String name;
-                                if (dataSnapshot.exists()) {
-                                    name = dataSnapshot.getValue().toString();
-                                } else {
-                                    name = "Unknown";
-                                }
-                                if (flag1[0] == 1) {
-                                    detail.add(name);
-                                    place.put(dist[0], detail); //adding the place details and distance into map
-                                }
-                                flag1[0] = 0;
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
-
-                    }
-                    db.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                           // Log.d("hi2", String.valueOf(place.size())+pref[finalI1]);
-                            for (Map.Entry<Double, List<String>> entry : place.entrySet()) {
-                                Double key = entry.getKey();
-                                List<String> values = entry.getValue();
-                                //Log.d("Key = ", key.toString());
-                                //Log.d("Values = ", values.toString());
-
-                            }
-                            int count = 0;
-                            TreeMap<Double, List<String>> target = new TreeMap<Double, List<String>>();
-                            for (Map.Entry<Double, List<String>> entry:place.entrySet()) {
-                                if (count >= 5) break;
-
-                                target.put(entry.getKey(), entry.getValue());
-                                count++;
-                            }
-                            /*for (Map.Entry<Double, List<String>> entry : target.entrySet()) {
-                                Double key = entry.getKey();
-                                List<String> values = entry.getValue();
-                                Log.d("TargetKey = ", key.toString());
-                                Log.d("TargetValues = ", values.toString());
-
-                            }*/
-                            sort(target);
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-
-                }
-
-
-
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-
-
-            };
-            mydb.addValueEventListener(x);
-
-        }
     }
 
-    private Double haversineformula(String lat, String lon, String curlat, String curlon) {
-        final int R = 6371; // Radious of the earth
-        Double lat1 = Double.parseDouble(curlat);
-        Double lon1 = Double.parseDouble(curlon);
-        Double lat2 = Double.parseDouble(lat);
-        Double lon2 = Double.parseDouble(lon);
-        Double latDistance = toRad(lat2 - lat1);
-        Double lonDistance = toRad(lon2 - lon1);
-        Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
-                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-                        Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        Double distance = R * c;
-
-        return distance;
-    }
-
-    private Double toRad(Double value) {
-        return value * Math.PI / 180;
-    }
-
-    private void sort(TreeMap<Double, List<String>> place) {
-            SortedSet<Map.Entry<Double, List<String>>> sortedEntries = new TreeSet<Map.Entry<Double, List<String>>>(
-                    new Comparator<Map.Entry<Double, List<String>>>() {
-                        @Override
-                        public int compare(Map.Entry<Double, List<String>> t1, Map.Entry<Double, List<String>> t2) {
-                            List<String> values1 = t1.getValue();
-                            List<String> values2= t2.getValue();
-                            //int res =values1.get(2).compareTo(values2.get(2));
-                           if(Float.parseFloat(values1.get(2))>Float.parseFloat(values2.get(2)))
-                               return -1;
-                            else
-                                return 1;
-
-                        }
-
-                    }
-            );
-            sortedEntries.addAll(place.entrySet());
-            for (Map.Entry<Double, List<String>> sortedEntry : sortedEntries) {
-                 Double key = sortedEntry.getKey();
-                List<String> values = sortedEntry.getValue();
-                Log.d("SortedKey = ", key.toString());
-                Log.d("SortedValues = ", values.toString());
-            }
-            /*Bundle b=new Bundle();
-            b.putSerializable("sorted", (Serializable) sortedEntries);
-            Intent in=new Intent(getApplicationContext(),Alg.class);
-            in.putExtras(b);
-            startActivity(in);*/
-        }
-
-    /*@Override
-    protected void onPause() {
-        super.onPause();
-        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                        PackageManager.PERMISSION_GRANTED) {
-            Log.d("test2","hi");
-            // TODO: Consider calling
-            return;
-        }
-        locationManager.removeUpdates(this);
-    }*/
     @Override
     public void onLocationChanged(Location location) {
-         lat = (float) (location.getLatitude());
-         lon = (float) (location.getLongitude());
+        lat = (float) (location.getLatitude());
+        lon = (float) (location.getLongitude());
         Log.d("Laatitude", String.valueOf(lat));
         Log.d("Longitude", String.valueOf(lon));
         Toast.makeText(this, " location! ", Toast.LENGTH_SHORT).show();
