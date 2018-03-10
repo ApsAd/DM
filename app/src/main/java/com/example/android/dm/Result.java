@@ -36,14 +36,16 @@ public class Result extends AppCompatActivity {
         ArrayList<ArrayList<String>> listOfLists = (ArrayList<ArrayList<String>>) b.getSerializable("listOfLists");
         //Log.d("route 1",listOfLists.get(0)+" "+listOfLists.get(5)+" "+listOfLists.get(10));
         String[] route11;
-        float[] routelatln = new float[2];
+
 
 
         for (int i = 0; i < 2; i++) {
             for (int j =i; j <= i + 10; j += 5) {
                 //route11 = listOfLists.get(j).split(",");
+                float[] routelatln = new float[2];
                 routelatln[0] = Float.parseFloat(listOfLists.get(j).get(0));
                 routelatln[1] = Float.parseFloat(listOfLists.get(j).get(1));
+                Log.d("mylatln",routelatln[0]+" "+routelatln[1]);
                 if (i == 0) {
                     route1.put(listOfLists.get(j).get(3), routelatln);
                 } else {
@@ -99,12 +101,13 @@ public class Result extends AppCompatActivity {
                         Log.d("response from server: ", (String) response.get(String.valueOf("finalrouteloc")));
                         String[] cfroutename=ListOfCF[0].split(",");
                         String[] cfroutelatlon=ListOfCF[1].split(",");
-                        float[] cflatln = new float[2];
+
                         Log.d("Length of name", String.valueOf(cfroutename.length));
 
                         Log.d("Length of lat", String.valueOf(cfroutelatlon.length));
 
                         for(int i = 0; i<cfroutename.length; i++){
+                            float[] cflatln = new float[2];
                             Log.d("inside loop i,k",i+""+k);
                             cflatln[0]= Float.parseFloat(cfroutelatlon[k]);
                             cflatln[1]= Float.parseFloat(cfroutelatlon[k+1]);
@@ -119,7 +122,13 @@ public class Result extends AppCompatActivity {
                             Log.d("Route3:", key + "lat " + value[0]+"long "+value[1]);
                         }
 
-
+                        Bundle bundle=new Bundle();
+                        bundle.putSerializable("route1",route1);
+                        bundle.putSerializable("route2",route2);
+                        bundle.putSerializable("route3",route3);
+                        Intent intent=new Intent(getApplicationContext(),Routes.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -138,13 +147,7 @@ public class Result extends AppCompatActivity {
 
         }
 
-        Bundle bundle=new Bundle();
-        bundle.putSerializable("route1",route1);
-        bundle.putSerializable("route2",route2);
-        bundle.putSerializable("route3",route3);
-        //Intent intent=new Intent(getApplicationContext(),Routes.class);
-        //intent.putExtras(bundle);
-        //startActivity(intent);
+
 
 
     }
