@@ -2,6 +2,7 @@ package layout;
 
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -29,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.android.dm.R;
+import com.example.android.dm.Rating;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -57,10 +59,7 @@ public class tab_fragment_3 extends Fragment implements View.OnClickListener, On
     private Button btnRequestDirection;
     private GoogleMap googleMap;
     private String serverKey = "AIzaSyD2YT_mb5cQbtK67fW_zeYgEPSjawVC2TM";
-    private LatLng park = new LatLng(41.8838111, -87.6657851);
-    private LatLng shopping = new LatLng(41.8766061, -87.6556908);
-    private LatLng dinner = new LatLng(41.8909056, -87.6467561);
-    private LatLng gallery = new LatLng(41.9007082, -87.6488802);
+
     String[] keys=new String[3];
     String email,routename="",routelatlon="";
     private Button insert;
@@ -125,6 +124,11 @@ public class tab_fragment_3 extends Fragment implements View.OnClickListener, On
                         }
                     });
                     queue.add(req);
+                    Bundle b=new Bundle();
+                    b.putString("email",email);
+                    Intent i=new Intent(getActivity().getApplicationContext(), Rating.class);
+                    i.putExtras(b);
+                    startActivity(i);
                 }catch(Exception e){
 
                 }
@@ -143,11 +147,14 @@ public class tab_fragment_3 extends Fragment implements View.OnClickListener, On
         if (direction.isOK()) {
             Route route = direction.getRouteList().get(0);
             int legCount = route.getLegList().size();
-            for (int index = 0; index < legCount; index++) {
+            for (int index = 0; index <legCount; index++) {
+                Log.d("legcount", String.valueOf(legCount));
                 Leg leg = route.getLegList().get(index);
+                Log.d("sl",leg.getStartLocation().getCoordination().toString());
+                Log.d("el",leg.getEndLocation().getCoordination().toString());
                 googleMap.addMarker(new MarkerOptions().position(leg.getStartLocation().getCoordination()).title(keys[index]));
                 if (index == legCount - 1) {
-                    googleMap.addMarker(new MarkerOptions().position(leg.getEndLocation().getCoordination()).title(keys[index]));
+                    googleMap.addMarker(new MarkerOptions().position(leg.getEndLocation().getCoordination()).title(keys[2]));
                 }
                 List<Step> stepList = leg.getStepList();
                 ArrayList<PolylineOptions> polylineOptionList = DirectionConverter.createTransitPolyline(getActivity().getApplicationContext(), stepList, 5, Color.RED, 3, Color.BLUE);

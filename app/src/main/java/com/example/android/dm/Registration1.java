@@ -57,7 +57,7 @@ public class Registration1 extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         final String email=b.getString("email");
         final String password=b.getString("password");
-        final StringBuilder preferences1=new StringBuilder(" ");
+        final StringBuilder preferences1=new StringBuilder("");
         amuzementpark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -218,6 +218,9 @@ public class Registration1 extends AppCompatActivity {
 
         Log.d("Preferences",preferences1.toString());
         // db.deleteAllUsers();
+        float lat = (float) 13.0429;
+        float lon = (float) 80.2739;
+        final String loc= ((String.valueOf(lat)))+","+String.valueOf(lon);
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,6 +236,7 @@ public class Registration1 extends AppCompatActivity {
                     userData.put("address",address.getEditableText().toString());
                     userData.put("phoneno",phoneno.getEditableText().toString());
                     userData.put("pref",preferences1.toString());
+                    userData.put("loc",loc);
 
                     JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, userData, new Response.Listener<JSONObject>() {
                         @Override

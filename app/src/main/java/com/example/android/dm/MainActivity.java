@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Bundle b = getIntent().getExtras();
-        lat = (float) 13.0429;
-        lon = (float) 80.2739;
+        lat = (float) 13.0587;
+        lon = (float) 80.2757;
         final String email=b.getString("email");
         final String password=b.getString("password");
         // Get the location manager
@@ -152,4 +152,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         Toast.makeText(this, "Disabled provider " + provider,
                 Toast.LENGTH_SHORT).show();
     }
+
+
 }

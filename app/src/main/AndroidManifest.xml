@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,18 +26,18 @@
         </activity>
         <activity android:name=".Registration1" />
         <activity android:name=".DisplayActivity" />
-        <activity android:name=".Home">
-
-        </activity>
+        <activity android:name=".Home"></activity>
         <activity android:name=".DPP" />
         <activity android:name=".Result" />
-        <activity android:name=".Routes">
+        <activity android:name=".Routes"></activity>
 
-        </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA_YdilKpvkfbGGGNvhEZL7ZfFuR5dEGHA" />
 
+        <activity android:name=".Rating">
+
+        </activity>
     </application>
 
 </manifest>

@@ -30,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.android.dm.R;
+import com.example.android.dm.Rating;
 import com.example.android.dm.Routes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -128,6 +129,11 @@ public class tab_fragment_1 extends Fragment implements View.OnClickListener, On
                         }
                     });
                     queue.add(req);
+                    Bundle b=new Bundle();
+                        b.putString("email",email);
+                        Intent i=new Intent(getActivity().getApplicationContext(), Rating.class);
+                        i.putExtras(b);
+                        startActivity(i);
                 }catch(Exception e){
 
                 }
@@ -150,7 +156,7 @@ public class tab_fragment_1 extends Fragment implements View.OnClickListener, On
                 Leg leg = route.getLegList().get(index);
                 googleMap.addMarker(new MarkerOptions().position(leg.getStartLocation().getCoordination()).title(keys[index]));
                 if (index == legCount - 1) {
-                    googleMap.addMarker(new MarkerOptions().position(leg.getEndLocation().getCoordination()).title(keys[index]));
+                    googleMap.addMarker(new MarkerOptions().position(leg.getEndLocation().getCoordination()).title(keys[2]));
                 }
                 List<Step> stepList = leg.getStepList();
                 ArrayList<PolylineOptions> polylineOptionList = DirectionConverter.createTransitPolyline(getActivity().getApplicationContext(), stepList, 5, Color.RED, 3, Color.BLUE);
